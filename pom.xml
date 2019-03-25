@@ -5,10 +5,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>user-management</module>
-        <module>pay-management</module>
-        <module>wechat-management</module>
-        <module>common-management</module>
+        <module>lion-wechat-service</module>
+        <module>lion-pay-service</module>
+        <module>lion-user-service</module>
+        <module>lion-core</module>
     </modules>
 
 
