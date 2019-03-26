@@ -1,1 +1,6 @@
+server:
+  port: 8910
 
+spring:
+  profiles:
+    active: db

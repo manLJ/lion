@@ -9,7 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wechat-management</artifactId>
+    <artifactId>lion-wechat-service</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com</groupId>
+            <artifactId>lion-core</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -9,14 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>user-management</artifactId>
-
-
+    <artifactId>lion-user-service</artifactId>
 
     <dependencies>
-
-
+        <dependency>
+            <groupId>com</groupId>
+            <artifactId>lion-core</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
-
 
 </project>

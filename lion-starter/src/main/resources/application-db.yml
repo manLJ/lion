@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    druid:
+      stat-view-servlet:
+        loginUsername: admin
+        loginPassword: 123456
+    dynamic:
+      primary: primary #设置默认的数据源或者数据源组,默认值即为master,如果你主从默认下主库的名称就是master可不定义此项。
+      datasource:
+        primary:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/lion?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+          username: lion
+          password: lion
+          druid: #以下均为默认值
+            #配置初始化大小、最小、最大
+            initial-size: 5
+            min-idle: 10
+            max-active: 20
+            #配置获取连接等待超时的时间
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-open-prepared-statements: 20
+            #配置一个连接在池中最小生存的时间，单位是毫秒
+            min-evictable-idle-time-millis: 600000
+            #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            time-between-eviction-runs-millis: 2000
+            validation-query: select 1
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            #配置监控统计拦截的filters
+            filters: stat
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath*:database/**/mysql/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.lion.**.domain.model
+  typeEnumsPackage: com.lion.**.domain.model
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: ID_WORKER_STR
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: not_empty
+      #驼峰下划线转换
+      column-underline: true
+      #数据库大写下划线转换
+      #capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      db-type: MYSQL
+    #刷新mapper 调试神器
+    refresh: true
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #打印sql语句，调试用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
