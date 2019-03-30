@@ -53,8 +53,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       db-type: MYSQL
-    #刷新mapper 调试神器
-    refresh: true
   # 原生配置
   configuration:
     map-underscore-to-camel-case: true

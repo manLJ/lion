@@ -41,6 +41,12 @@
         </dependency>
 
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com</groupId>
             <artifactId>lion-user-service</artifactId>
             <version>0.0.1</version>
