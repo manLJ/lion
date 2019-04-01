@@ -56,7 +56,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, project_build_path),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: '',
 
     /**
      * You can set by youself according to actual condition
