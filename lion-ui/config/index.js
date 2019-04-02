@@ -3,7 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-const project_build_path = '../../lion-starter/src/main/resources/static';
+const basePath="../../lion-starter/src/main/resources/static";
 
 module.exports = {
   dev: {
@@ -13,15 +13,12 @@ module.exports = {
     proxyTable: {
       '/api/**': {
         target: 'http://localhost:8910'
-      }
+      },
     },
 
     // Various Dev Server settings
-
-    // can be overwritten by process.env.HOST
-    // if you want dev by ip, please set host: '0.0.0.0'
-    host: 'localhost',
-    port: 3000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: 'localhost', // can be overwritten by process.env.HOST
+    port: 9528, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
@@ -52,11 +49,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, project_build_path + '/index.html'),
+    index: path.resolve(__dirname, basePath + '/end/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, project_build_path),
-    assetsSubDirectory: '',
+    assetsRoot: path.resolve(__dirname, basePath),
+    assetsSubDirectory: 'end',
 
     /**
      * You can set by youself according to actual condition
@@ -70,6 +67,7 @@ module.exports = {
     /**
      * Source Maps
      */
+
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: 'source-map',
@@ -83,7 +81,7 @@ module.exports = {
 
     // Run the build command with an extra argument to
     // View the bundle analyzer report after build finishes:
-    // `npm run build:prod --report`
+    // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report || false,
 

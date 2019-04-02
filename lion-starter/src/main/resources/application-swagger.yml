@@ -1,0 +1,17 @@
+swagger:
+  enabled: true
+  title: 系统管理API
+  description: 开放系统管理模块API，包括数据字典，系统权限，系统用户，角色几角色权限等管理API
+  version: 1.0.0
+  contact:
+    name: Lianhong
+  authorization:
+    name: Authorization
+    key-name: X-AUTH-TOKEN
+  base-package: com.lion
+  docket:
+    demo:
+      title: ...管理相关接口
+      description: 描述
+      base-package: com.lion
+      base-path: /system/menu/**

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lion.systemmgr.organization.domain.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lion.systemmgr.organization.domain.model.User">
+        <id column="ID" property="id"/>
+        <result column="account" property="account"/>
+        <result column="china_name" property="chinaName"/>
+        <result column="head_photo" property="headPhoto"/>
+        <result column="TOKEN" property="token"/>
+        <result column="DELSTATUS" property="delstatus"/>
+        <result column="IP" property="ip"/>
+        <result column="login_time" property="loginTime"/>
+        <result column="PHONE" property="phone"/>
+        <result column="CREATOR" property="creator"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="MODIFIER" property="modifier"/>
+        <result column="UPDATE_DATE" property="updateDate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, account, china_name, head_photo, token, delstatus, ip, login_time, phone, creator, create_date, modifier, update_date
+    </sql>
+
+</mapper>

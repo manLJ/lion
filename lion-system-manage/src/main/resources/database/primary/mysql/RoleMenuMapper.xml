@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lion.systemmgr.rbac.domain.mapper.RoleMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lion.systemmgr.rbac.domain.model.RoleMenu">
+        <id column="ID" property="id" />
+        <result column="MENU_ID" property="menuId" />
+        <result column="ROLE_ID" property="roleId" />
+        <result column="DELSTATUS" property="delstatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, MENU_ID, ROLE_ID, DELSTATUS
+    </sql>
+    <select id="loadAllPrivileges" parameterType="java.lang.String" resultType="com.lion.systemmgr.metadata.domain.model.Menu">
+        select * from SYS_MENU m where m.id in (select r.MENU_ID from sys_role_menu r where r.role_id=#{roleId})
+    </select>
+
+</mapper>

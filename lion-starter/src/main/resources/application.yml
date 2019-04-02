@@ -3,4 +3,12 @@ server:
 
 spring:
   profiles:
-    active: db
+    active: db,swagger
+
+#最大登录错误次数限制
+login:
+  maxErrorTimes: 5
+
+#新增用户默认密码
+identity:
+  defaultToken: 888888

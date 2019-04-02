@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lion.systemmgr.rbac.domain.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lion.systemmgr.rbac.domain.model.Role">
+        <id column="ID" property="id"/>
+        <result column="ROLE_NAME" property="roleName"/>
+        <result column="DELSTATUS" property="delstatus"/>
+        <result column="TYPE" property="type"/>
+        <result column="CREATOR" property="creator"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="MODIFIER" property="modifier"/>
+        <result column="UPDATE_DATE" property="updateDate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, ROLE_NAME, DELSTATUS,TYPE,OPERATOR, CREATE_DATE, MODIFIER, UPDATE_DATE
+    </sql>
+    <select id="listUserRoles" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from SYS_ROLE WHERE id in (select role_id from SYS_USER_ROLE where USER_ID=#{userId})
+    </select>
+
+</mapper>

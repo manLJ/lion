@@ -7,16 +7,15 @@
       :on-success="handleImageSuccess"
       class="image-uploader"
       drag
-      action="https://httpbin.org/post"
-    >
-      <i class="el-icon-upload" />
+      action="https://httpbin.org/post">
+      <i class="el-icon-upload"/>
       <div class="el-upload__text">Drag或<em>点击上传</em></div>
     </el-upload>
     <div v-show="imageUrl.length>0" class="image-preview">
       <div v-show="imageUrl.length>1" class="image-preview-wrapper">
         <img :src="imageUrl">
         <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
+          <i class="el-icon-delete" @click="rmImage"/>
         </div>
       </div>
     </div>
@@ -24,8 +23,6 @@
 </template>
 
 <script>
-import { getToken } from '@/api/qiniu'
-
 export default {
   name: 'SingleImageUpload2',
   props: {
@@ -54,21 +51,6 @@ export default {
     },
     handleImageSuccess() {
       this.emitInput(this.tempUrl)
-    },
-    beforeUpload() {
-      const _self = this
-      return new Promise((resolve, reject) => {
-        getToken().then(response => {
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(() => {
-          reject(false)
-        })
-      })
     }
   }
 }

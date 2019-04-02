@@ -1,112 +1,96 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import * as auth from '@/utils/auth'
 
 const user = {
   state: {
-    user: '',
-    status: '',
-    code: '',
-    token: getToken(),
+    token: auth.getToken(),
     name: '',
-    avatar: '',
-    introduction: '',
     roles: [],
-    setting: {
-      articlePlatform: []
-    }
+    visitPermissions: [],
+    operationPermissions: []
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
     SET_TOKEN: (state, token) => {
       state.token = token
-    },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
-    SET_SETTING: (state, setting) => {
-      state.setting = setting
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status
     },
     SET_NAME: (state, name) => {
       state.name = name
     },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
-    },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_VISIT_PERMISSIONS: (state, permissions) => {
+      if(permissions.length === 0) permissions.push("dashboard");
+      state.visitPermissions = permissions
+    },
+    SET_OPERATION_PERMISSIONS: (state, permissions) => {
+      state.operationPermissions = permissions
     }
   },
 
   actions: {
-    // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+    // 登录
+    Login({ commit }, userInfo) {
+
+      const userName = userInfo.username.trim();
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        auth.verifyIdentifyCode(userInfo.identifyCode).then(r =>{
+          if(r.passed){
+            //服务器端获取TOKEN
+            auth.generateToken(userName).then(result => {
+              if(result.passed){
+                //验证用户的TOKEN
+                auth.verifyToken(userName,userInfo.password,result.token).then(_result => {
+                  if (_result.passed) {
+                    auth.setToken(_result.token);
+                    commit('SET_TOKEN', _result.token);
+                    resolve();
+                  }
+                  else  {
+                    auth.removeToken();
+                    reject(_result.message);
+                  }
+                }).catch(error => {
+                  auth.removeToken();
+                  reject(error);
+                });
+              }
+              else  reject(result.message);
+            }).catch(error => {
+              reject(error);
+            });
+          }
+          else  reject("验证码错误，请重新输入");
+        }).catch(error=>{
+          reject(error);
+        });
       })
     },
 
     // 获取用户信息
-    GetUserInfo({ commit, state }) {
+    GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          // 由于mockjs 不支持自定义状态码只能这样hack
-          if (!response.data) {
-            reject('Verification failed, please login again.')
-          }
-          const data = response.data
-
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array!')
-          }
-
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
+        auth.getUserInfo().then(result => {
+          commit('SET_NAME', result.chinaName);
+          //记录当前用户的访问权限
+          commit('SET_VISIT_PERMISSIONS', result.visitPrivileges);
+          //记录当前用户的操作权限
+          commit('SET_OPERATION_PERMISSIONS', result.operationPrivileges);
+          resolve(result)
         }).catch(error => {
           reject(error)
         })
       })
     },
 
-    // 第三方验证登录
-    // LoginByThirdparty({ commit, state }, code) {
-    //   return new Promise((resolve, reject) => {
-    //     commit('SET_CODE', code)
-    //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-    //       commit('SET_TOKEN', response.data.token)
-    //       setToken(response.data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
-
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resolve()
+        auth.logout().then(() => {
+          commit('SET_TOKEN', '');
+          commit('SET_ROLES', []);
+          auth.removeToken();
+          resolve();
         }).catch(error => {
           reject(error)
         })
@@ -117,25 +101,8 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
-        removeToken()
+        auth.removeToken()
         resolve()
-      })
-    },
-
-    // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', role)
-        setToken(role)
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
-          resolve()
-        })
       })
     }
   }

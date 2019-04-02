@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lion.systemmgr.rbac.domain.mapper.PrivilegeMapper">
+    <!--原符号       <        <=      >       >=       &        '        "-->
+    <!--替换符号    &lt;    &lt;=   &gt;    &gt;=   &amp;   &apos;  &quot;-->
+
+    <resultMap id="VisitPrivilegeResultMap" type="com.lion.systemmgr.rbac.domain.model.VisitPrivilege">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="OperationPrivilegeResultMap" type="com.lion.systemmgr.rbac.domain.model.OperationPrivilege">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="menuCode" property="menuCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findUserVisitPrivileges" parameterType="java.lang.String" resultMap="VisitPrivilegeResultMap">
+        SELECT
+            sys_menu.code,
+            sys_menu.name
+        FROM
+          sys_menu
+        INNER JOIN sys_role_menu ON sys_role_menu.menu_id = sys_menu.id
+        INNER JOIN sys_user_role ON sys_role_menu.role_id = sys_user_role.role_id
+        INNER JOIN sys_user ON sys_user.id = sys_user_role.user_id
+        WHERE
+            sys_menu.delstatus = 1 AND
+            sys_role_menu.delstatus = 1 AND
+            sys_user_role.delstatus = 1 AND
+            sys_user.account = #{userName}
+        ORDER BY
+          sys_menu.id ASC
+    </select>
+
+    <select id="findUserOperationPrivileges" parameterType="java.lang.String" resultMap="OperationPrivilegeResultMap">
+        SELECT
+            sys_menu_operation.code,
+            sys_menu_operation.name,
+            sys_menu.code AS menuCode
+
+        FROM
+            sys_menu_operation
+        INNER JOIN sys_menu ON sys_menu.id = sys_menu_operation.menu_id
+        INNER JOIN sys_role_operation ON sys_role_operation.operation_id = sys_menu_operation.id
+        INNER JOIN sys_user_role ON sys_user_role.role_id = sys_role_operation.role_id
+        INNER JOIN sys_user ON sys_user.id = sys_user_role.user_id
+        WHERE
+            sys_menu_operation.delstatus = 1 AND
+            sys_role_operation.delstatus = 1 AND
+            sys_user_role.delstatus = 1 AND
+            sys_user.account = #{userName}
+        ORDER BY
+            sys_menu_operation.id ASC
+    </select>
+
+</mapper>

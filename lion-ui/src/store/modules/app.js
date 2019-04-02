@@ -1,57 +1,49 @@
-import Cookies from 'js-cookie'
+import Vue from 'vue'
+import Storage from 'vue-ls';
+
+let options = {
+  name: 'ls', // name variable Vue.[ls] or this.[$ls],
+  storage: 'session', // storage name session, local, memory
+};
+Vue.use(Storage, options);
+
 
 const app = {
   state: {
     sidebar: {
-      opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+      opened: !+Vue.ls.get('sidebarStatus'),
       withoutAnimation: false
     },
-    device: 'desktop',
-    language: Cookies.get('language') || 'en',
-    size: Cookies.get('size') || 'medium'
+    device: 'desktop'
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
+      if (state.sidebar.opened) {
+        Vue.ls.set('sidebarStatus', 1)
+      } else {
+        Vue.ls.set('sidebarStatus', 0)
+      }
       state.sidebar.opened = !state.sidebar.opened
       state.sidebar.withoutAnimation = false
-      if (state.sidebar.opened) {
-        Cookies.set('sidebarStatus', 1)
-      } else {
-        Cookies.set('sidebarStatus', 0)
-      }
     },
     CLOSE_SIDEBAR: (state, withoutAnimation) => {
-      Cookies.set('sidebarStatus', 0)
+      Vue.ls.set('sidebarStatus', 1)
       state.sidebar.opened = false
       state.sidebar.withoutAnimation = withoutAnimation
     },
     TOGGLE_DEVICE: (state, device) => {
       state.device = device
-    },
-    SET_LANGUAGE: (state, language) => {
-      state.language = language
-      Cookies.set('language', language)
-    },
-    SET_SIZE: (state, size) => {
-      state.size = size
-      Cookies.set('size', size)
     }
   },
   actions: {
-    toggleSideBar({ commit }) {
+    ToggleSideBar: ({ commit }) => {
       commit('TOGGLE_SIDEBAR')
     },
-    closeSideBar({ commit }, { withoutAnimation }) {
+    CloseSideBar({ commit }, { withoutAnimation }) {
       commit('CLOSE_SIDEBAR', withoutAnimation)
     },
-    toggleDevice({ commit }, device) {
+    ToggleDevice({ commit }, device) {
       commit('TOGGLE_DEVICE', device)
-    },
-    setLanguage({ commit }, language) {
-      commit('SET_LANGUAGE', language)
-    },
-    setSize({ commit }, size) {
-      commit('SET_SIZE', size)
     }
   }
 }

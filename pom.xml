@@ -7,7 +7,7 @@
     <modules>
         <module>lion-wechat-service</module>
         <module>lion-pay-service</module>
-        <module>lion-user-service</module>
+        <module>lion-system-manage</module>
         <module>lion-core</module>
     </modules>
 

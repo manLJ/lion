@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lion.systemmgr.rbac.domain.mapper.RoleOperationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lion.systemmgr.rbac.domain.model.RoleOperation">
+        <id column="ID" property="id" />
+        <result column="MENU_ID" property="menuId" />
+        <result column="OPERATION_ID" property="operationId" />
+        <result column="ROLE_ID" property="roleId" />
+        <result column="DELSTATUS" property="delstatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, MENU_ID, OPERATION_ID, ROLE_ID, DELSTATUS
+    </sql>
+    <select id="loadAllOperations" parameterType="java.lang.String"
+            resultType="com.lion.systemmgr.metadata.domain.model.MenuOperation">
+        select * from sys_menu_operation mop where exists (select rop.id from SYS_ROLE_OPERATION rop where rop.operation_Id=mop.id and rop.role_Id=#{roleId} and rop.delstatus = '1') and mop.delstatus = '1'
+    </select>
+
+</mapper>

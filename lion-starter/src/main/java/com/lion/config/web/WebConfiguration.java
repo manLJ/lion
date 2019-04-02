@@ -18,6 +18,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
@@ -35,6 +36,21 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(requestParamsArgumentResolver);
+    }
+
+    @Autowired
+    private WebRequestInterceptor webRequestInterceptor;
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 自定义拦截器，添加拦截路径和排除拦截路径
+        registry.addInterceptor(webRequestInterceptor)
+                .addPathPatterns("/system/**")
+                .excludePathPatterns(
+                        "/system/verification/code/**",     //图片验证码
+                        "/system/auth/authority/**"         //登录
+                );
     }
 
     @Bean

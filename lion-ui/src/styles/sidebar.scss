@@ -83,26 +83,19 @@
 
   .hideSidebar {
     .sidebar-container {
-      width: 54px !important;
+      width: 36px !important;
     }
 
     .main-container {
-      margin-left: 54px;
-    }
-
-    .svg-icon {
-      margin-right: 0px;
+      margin-left: 36px;
     }
 
     .submenu-title-noDropdown {
-      padding: 0 !important;
+      padding-left: 10px !important;
       position: relative;
 
       .el-tooltip {
-        padding: 0 !important;
-        .svg-icon {
-          margin-left: 20px;
-        }
+        padding: 0 10px !important;
       }
     }
 
@@ -110,10 +103,7 @@
       overflow: hidden;
 
       &>.el-submenu__title {
-        padding: 0 !important;
-        .svg-icon {
-          margin-left: 20px;
-        }
+        padding-left: 10px !important;
 
         .el-submenu__icon-arrow {
           display: none;
@@ -180,27 +170,8 @@
   .nest-menu .el-submenu>.el-submenu__title,
   .el-menu-item {
     &:hover {
-      // you can use $subMenuHover
+      // You can use $subMenuHover
       background-color: $menuHover !important;
-    }
-  }
-
-  // the scroll bar appears when the subMenu is too long
-  >.el-menu--popup {
-    max-height: 100vh;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar-track-piece {
-      background: #d3dce6;
-    }
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #99a9bf;
-      border-radius: 20px;
     }
   }
 }
