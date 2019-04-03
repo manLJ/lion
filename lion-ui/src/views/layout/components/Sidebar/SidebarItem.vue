@@ -98,7 +98,6 @@ export default {
       return isExternal(routePath)
     },
     hasPermission(router){
-      console.log(router)
       // return true;
       if(router.meta && router.meta.code) return this.$lodash.some(store.getters.visitPermissions,{code:router.meta.code});
       else return true;

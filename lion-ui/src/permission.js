@@ -7,8 +7,6 @@ import { getToken } from '@/utils/auth' // 验权
 
 // permission judge function
 function hasPermission(router) {
-  console.log(router)
-  console.log(store.getters.visitPermissions)
   // return true;
   if(router.meta && router.meta.code) return _.some(store.getters.visitPermissions,{code:router.meta.code});
   else return true;
