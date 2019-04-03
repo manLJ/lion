@@ -6,7 +6,7 @@ const systemMgrRouter = [
   {
     path: '/system-mgr',
     component: Layout,
-    // redirect: '/system-mgr/category',
+    redirect: '/system-mgr/category',
     name: 'SystemMgr',
     meta: {title: '系统管理', code: 'systemmgr', icon: 'example'},
     sortIndex: 5,
