@@ -20,7 +20,7 @@ const user = {
       state.roles = roles
     },
     SET_VISIT_PERMISSIONS: (state, permissions) => {
-      if(permissions.length === 0) permissions.push("dashboard");
+      permissions.push({code:"dashboard"});
       state.visitPermissions = permissions
     },
     SET_OPERATION_PERMISSIONS: (state, permissions) => {

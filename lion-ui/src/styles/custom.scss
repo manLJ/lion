@@ -1,0 +1,46 @@
+
+.el-main{
+  padding: 0 20px;
+}
+.el-card__header{
+  padding: 4px 20px;
+}
+.card-header{
+  line-height: 35px;
+  width: 100%;
+  padding-top: 3px;
+  display: inline-block;
+}
+.card-header-text{
+  position: absolute;
+}
+
+.btn-right{
+  float: right; margin: 0 5px
+}
+
+
+
+.icon-success{
+  color: #37e600;
+  cursor: pointer;
+}
+.icon-info{
+  color: #545c64;
+  cursor: pointer;
+}
+.icon-danger{
+  color: #e62b31;
+  cursor: pointer;
+}
+.icon-warning{
+  color: #e5e600;
+  cursor: pointer;
+}
+
+.ali-2x{
+  font-size: 23px !important;
+}
+.ali-3x{
+  font-size:  28px !important;
+}

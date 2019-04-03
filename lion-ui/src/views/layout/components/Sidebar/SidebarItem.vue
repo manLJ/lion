@@ -14,7 +14,7 @@
         <item v-if="item.meta" :icon="item.meta.icon" :title="item.meta.title" />
       </template>
 
-      <template v-for="child in item.children" v-if="!child.hidden">
+      <template v-for="child in item.children" v-if="!child.hidden && hasPermission(child)">
         <sidebar-item
           v-if="child.children&&child.children.length>0"
           :is-nest="true"
@@ -98,8 +98,8 @@ export default {
       return isExternal(routePath)
     },
     hasPermission(router){
+      console.log(router)
       // return true;
-      debugger
       if(router.meta && router.meta.code) return this.$lodash.some(store.getters.visitPermissions,{code:router.meta.code});
       else return true;
     }
