@@ -53,8 +53,8 @@ service.interceptors.response.use(
           errorMsg = '请求超时'
           break;
         case 500:
-          if (error.response.data && error.response.data.message) {
-            errorMsg = error.response.data.message;
+          if (error.response.data && error.response.data.description) {
+            errorMsg = error.response.data.description;
           } else errorMsg = '服务器端出错'
           break;
         case 501:
