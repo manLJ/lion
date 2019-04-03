@@ -39,7 +39,7 @@ public class AuthenticationResource {
         VerifyResult result = authentication.verifyUserAccount(userName);
         if (result.isPassed()) {
             //生成密钥
-            result.setToken(authentication.generateToken(userName, request));
+            result.setToken(authentication.generateEncryptKey(userName, request));
         }
         return result;
     }
@@ -65,7 +65,7 @@ public class AuthenticationResource {
     })
     @RequestMapping(value = "/verify", method = RequestMethod.PUT)
     public VerifyResult verifyUserToken(@RequestBody JSONObject params, HttpServletRequest request) {
-        return authentication.verifyUserToken(params.getString("userName"), params.getString("signData"), params.getString("code"), request);
+        return authentication.verifyUserToken(params.getString("token"), params.getString("signData"), request);
     }
 
     /**

@@ -7,7 +7,7 @@ swagger:
     name: Lianhong
   authorization:
     name: Authorization
-    key-name: X-AUTH-TOKEN
+    key-name: X-Auth-Token
   base-package: com.lion
   docket:
     demo:

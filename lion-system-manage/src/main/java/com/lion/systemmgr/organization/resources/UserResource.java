@@ -115,6 +115,17 @@ public class UserResource {
     }
 
     /**
+     * 查询用户权限
+     *
+     * @return 用户
+     */
+    @ApiOperation(value = "查询用户权限")
+    @RequestMapping(value = "/current/privileges", method = RequestMethod.GET)
+    public User loadCurrentUserPrivileges() {
+        return userService.findUserByAccount(HttpSessionLocal.getCurrentUser().getAccount());
+    }
+
+    /**
      * 查询封禁用户列表
      *
      * @param account

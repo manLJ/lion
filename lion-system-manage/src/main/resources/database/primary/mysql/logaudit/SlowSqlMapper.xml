@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lion.logaudit.domain.mapper.SlowSqlMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lion.logaudit.domain.model.SlowSql">
+        <id column="ID" property="id"/>
+        <result column="OPERATETIME" property="operateTime"/>
+        <result column="SLOWSQL" property="slowSql"/>
+        <result column="DURATION" property="duration"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID
+        ,
+        OPERATETIME,
+        SLOWSQL,
+        DURATION
+    </sql>
+
+    <select id="listBy" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mgnt_slowsql
+        <where>
+            <if test="beginTime!=null and beginTime!=''">
+                AND operateTime >= #{beginTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                AND operateTime &lt; #{endTime}
+            </if>
+        </where>
+        order by operateTime desc
+    </select>
+</mapper>

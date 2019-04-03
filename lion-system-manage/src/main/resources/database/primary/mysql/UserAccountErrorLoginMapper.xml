@@ -22,14 +22,10 @@
         a.account AS account,
         a.ip AS ip,
         a.ERROR_DATE AS errorDate,
-        b.china_name AS chinaName,
-        e.ENTERPRISE_NAME AS enterpriseName,
-        e.TAX_REFUND_CODE AS taxRefundCode
+        b.china_name AS chinaName
         FROM
         sys_user_account_error_login a
         LEFT JOIN sys_user b ON a.account = b.account
-        LEFT JOIN sys_user_enterprise_rel r ON r.user_id = b.id
-        left join b_enterprise e on e.id = r.enterprise_id
         WHERE 1=1
         <if test="account!='' and account!=null">
             AND b.account LIKE CONCAT('%', #{account}, '%')

@@ -61,16 +61,5 @@ public class UserRoleResource {
     public List<Role> loadAll(@PathVariable("userId") String userId, @RequestBody List<Role> roles) {
         return userRoleService.assignRoles(userId, roles);
     }
-
-    /**
-     * 查询用户权限
-     *
-     * @return 用户
-     */
-    @ApiOperation(value = "查询用户权限")
-    @RequestMapping(value = "/current/privileges", method = RequestMethod.GET)
-    public User loadCurrentUserPrivileges() {
-        return userService.findUserByAccount(HttpSessionLocal.getCurrentUser().getAccount());
-    }
 }
 

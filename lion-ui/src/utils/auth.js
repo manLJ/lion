@@ -43,7 +43,7 @@ export function verifyToken(userName, password, token) {
 }
 
 export function getUserInfo() {
-  return request.get('/systemmgr/organization/users/current/privileges');
+  return request.get('/system/organization/users/current/privileges');
 }
 export function logout() {
   return request.put('/system/auth/authority/logout')

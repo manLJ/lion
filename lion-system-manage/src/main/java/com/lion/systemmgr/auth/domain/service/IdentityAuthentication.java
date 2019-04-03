@@ -36,9 +36,11 @@ public class IdentityAuthentication {
         return new VerifyResult(true);
     }
 
-    private void bindTokenToUser(String userName, String token, HttpServletRequest request) {
-        RequestIdentity requestIdentity = new RequestIdentity(userName, token, request.getRemoteAddr(), request.getHeader("user-agent"), System.currentTimeMillis());
-        HttpSessionLocal.setAttribute(token, requestIdentity);
+    private RequestIdentity bindTokenToUser(String userName, String accessToken, HttpServletRequest request) {
+        RequestIdentity requestIdentity = new RequestIdentity(userName, accessToken, request.getRemoteAddr(), request.getHeader("user-agent"), System.currentTimeMillis());
+        //记录登录用户身份
+        HttpSessionLocal.setAttribute(accessToken, requestIdentity);
+        return requestIdentity;
     }
 
     public String generateToken(String userName, HttpServletRequest request) {
@@ -61,9 +63,23 @@ public class IdentityAuthentication {
         return false;
     }
 
-    private boolean validateUserToken(String userName, HttpServletRequest request, String clientSignData) {
+    /**
+     * 创建登录用户加密密钥
+     *
+     * @param userName
+     * @param request
+     * @return
+     */
+    public String generateEncryptKey(String userName, HttpServletRequest request) {
+        String agentToken = userName + request.getHeader("user-agent") + request.getRemoteAddr();
+        String secretKey = EncryptionHelper.signDataWithToken(String.valueOf(System.currentTimeMillis()), agentToken);
+        HttpSessionLocal.setAttribute(secretKey, userName);
+        return secretKey;
+    }
+
+    private boolean validateUserToken(String token, String userName, String clientSignData) {
         //获取密钥
-        String token = getRequestIdentity(request).getUserToken();
+        /*String token = getRequestIdentity(request).getUserToken();
         //读取服务端待签名数据
         String signData = this.userProvider.getUserToken(userName);
         //使用密钥签名数据
@@ -78,32 +94,45 @@ public class IdentityAuthentication {
         if (signedData != null && signedData.equals(clientSignData))
             userAccountErrorLoginService.removeByAccount(userName);
 
+        return signedData == null ? false : signedData.equals(clientSignData);*/
+
+        //读取服务端待签名数据
+        String signData = this.userProvider.getUserToken(userName);
+        //使用密钥签名数据
+        String signedData = EncryptionHelper.signDataWithToken(signData, token);
+        //判断服务端签名数据与客户端签名数据是否相等
+        if (userAccountErrorLoginService.verifyAccountErrors(userName))
+            throw new ApplicationException("validateUserToken-001", "该用户密码错误达到5次，已被封锁，请联系管理员。");
+        //判断服务端签名数据与客户端签名数据是否相等
         return signedData == null ? false : signedData.equals(clientSignData);
+
     }
 
-    public VerifyResult verifyUserToken(String userName, String signData, String verifyCode, HttpServletRequest request) {
+    public VerifyResult verifyUserToken(String token, String signData, HttpServletRequest request) {
+
+       /* String userName = String.valueOf(HttpSessionLocal.getAttribute(token));
+
         if (!validateRequestStatus(request))
             throw new ApplicationException("SESSION_FAILURE", "会话失效，请重新登陆。");
         if (!validateUserToken(userName, request, signData))
             throw new ApplicationException("PASSWORD_ERROR", "用户密码不正确。");
-        if (!validateUserDingCode(userName, verifyCode, request)) {
-            throw new ApplicationException("CODE_ERROR", "验证码不正确。");
-        }
+
         RequestIdentity identity = getRequestIdentity(request);
         identity.setSignData(signData);
         identity.setUser(userProvider.getUserInfo(userName));
-        HttpSessionLocal.removeAttribute("MANAGER-VERIFYCODE-" + userName);//清除钉钉验证码
         return new VerifyResult(true);
-    }
+*/
+        String userName = String.valueOf(HttpSessionLocal.getAttribute(token));
+        if (!validateUserToken(token, userName, signData))
+            throw new ApplicationException("AU-0004", "用户或密码不正确。");
+        String accessToken = generateEncryptKey(userName, request);
+        RequestIdentity identity = bindTokenToUser(userName, accessToken, request);
+        identity.setSignData(signData);
+        identity.setUser(userProvider.getUserInfo(userName));
 
-    /**
-     * 校验钉钉验证码
-     */
-    private boolean validateUserDingCode(String userName, String verifyCode, HttpServletRequest request) {
-        String sessionVerifyCode = (String) HttpSessionLocal.getAttribute("MANAGER-VERIFYCODE-" + userName);
-        //判断验证码是否相同
-        if (StringUtils.isEmpty(verifyCode) || StringUtils.isEmpty(sessionVerifyCode)) return false;
-        else return verifyCode.equalsIgnoreCase(sessionVerifyCode);
+        VerifyResult result = new VerifyResult(true);
+        result.setToken(accessToken);
+        return result;
     }
 
     public VerifyResult logout(HttpServletRequest request) {
